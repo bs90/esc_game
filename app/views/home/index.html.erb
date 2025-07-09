@@ -1,0 +1,25 @@
+<% if current_user %>
+  <div class="flex flex-col items-center my-4 w-full">
+    <%= image_tag @qr_url %>
+    <div class="w-full grid gap-4 grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 mt-4">
+      <div class="bg-white rounded-xl shadow p-4 text-center w-full">
+        <p class="font-semibold text-lg">Items</p>
+      </div>
+      <div class="bg-white rounded-xl shadow p-4 text-center w-full">
+        <p class="font-semibold text-lg">Games</p>
+      </div>
+      <div class="bg-white rounded-xl shadow p-4 text-center w-full">
+        <p class="font-semibold text-lg">Logs</p>
+      </div>
+      <div class="bg-white rounded-xl shadow p-4 text-center w-full">
+        <p class="font-semibold text-lg">Touches</p>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <ul>
+    <li>●　We don't store any of your personal information (such as email, name, avatar, etc.) in our database! You can check the source code <a class="underline" href="https://github.com/bs90/esc_game" target="_blank">HERE</a></li>
+    <li>●　This service is available today only — we'll delete everything tonight!</li>
+    <li>→　So just go ahead and...</li>
+  </ul>
+<% end %>
