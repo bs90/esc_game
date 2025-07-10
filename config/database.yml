@@ -11,6 +11,7 @@ development:
 production:
   <<: *default
   url: <%= ENV["DATABASE_URL"] %>
+  prepared_statements: false
 
 cache:
   <<: *default

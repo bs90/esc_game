@@ -17,5 +17,6 @@ Rails.application.routes.draw do
   get '/auth/failure', to: redirect('/')
   get '/login', to: redirect('/auth/google_oauth2')
   get '/logout', to: 'sessions#destroy'
-
+  
+  get '/touch/:id', to: 'home#touch'
 end
