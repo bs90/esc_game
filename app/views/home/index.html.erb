@@ -9,13 +9,25 @@
         <p class="font-semibold text-lg">Items</p>
       </div>
       <div class="bg-white rounded-xl shadow p-4 text-center w-full">
-        <p class="font-semibold text-lg">Games</p>
-      </div>
-      <div class="bg-white rounded-xl shadow p-4 text-center w-full">
         <p class="font-semibold text-lg">Logs</p>
       </div>
+      <%= link_to notifications_path do %>
+        <div class="bg-white rounded-xl shadow p-4 text-center w-full">
+          <p class="font-semibold text-lg flex items-center justify-center">
+            Notifications
+            <% if current_user.unread_notifications_count.to_i > 0 %>
+              <span class="ml-2 inline-block bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                <%= current_user.unread_notifications_count %>
+              </span>
+            <% end %>
+          </p>
+        </div>
+      <% end %>
       <div class="bg-white rounded-xl shadow p-4 text-center w-full">
-        <p class="font-semibold text-lg">Touches(<%= current_user.touch_count %>)</p>
+        <p class="font-semibold text-lg">
+          Touches
+          <span class="ml-2 inline-block bg-green-500 text-white text-xs font-bold px-2 py-0.5 rounded-full"><%= current_user.touch_count %></span>
+        </p>
       </div>
     </div>
   </div>

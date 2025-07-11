@@ -19,4 +19,5 @@ Rails.application.routes.draw do
   get '/logout', to: 'sessions#destroy'
   
   get '/touch/:id', to: 'home#touch'
+  get '/notifications', to: 'home#notifications'
 end

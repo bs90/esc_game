@@ -10,9 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_10_092653) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_11_140432) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "notifications", force: :cascade do |t|
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "touches", force: :cascade do |t|
     t.string "touch_user_id"
@@ -24,5 +30,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_10_092653) do
   create_table "users", id: :string, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "last_read_notification_id"
   end
 end
