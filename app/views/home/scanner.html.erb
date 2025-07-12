@@ -1,0 +1,47 @@
+<div id="camera-container" class="fixed inset-0 w-screen h-screen bg-black -z-50">
+  <video id="camera-stream" autoplay playsinline class="w-screen h-screen object-cover"></video>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const video = document.getElementById('camera-stream');
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+        .then(function(stream) {
+          video.srcObject = stream;
+          video.onloadedmetadata = function() {
+            startQRDetection();
+          };
+        })
+        .catch(function(err) {
+          alert("Unable to access camera: " + err);
+        });
+    } else {
+      alert("Camera not supported in this browser.");
+    }
+
+    function startQRDetection() {
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      function scan() {
+        if (video.readyState === video.HAVE_ENOUGH_DATA) {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          context.drawImage(video, 0, 0, canvas.width, canvas.height);
+          const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+          const code = jsQR(imageData.data, imageData.width, imageData.height);
+          if (code) {
+            if (code.data && code.data.includes("sunesc.heasygame.online")) {
+              window.location.href = code.data;
+            }
+          } else {
+            requestAnimationFrame(scan);
+          }
+        } else {
+          requestAnimationFrame(scan);
+        }
+      }
+      scan();
+    }
+  });
+</script>

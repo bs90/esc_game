@@ -20,4 +20,5 @@ Rails.application.routes.draw do
   
   get '/touch/:id', to: 'home#touch'
   get '/notifications', to: 'home#notifications'
+  get '/scanner', to: 'home#scanner'
 end

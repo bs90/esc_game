@@ -1,7 +1,8 @@
 <% if current_user %>
   <div class="flex flex-col items-center my-4 w-full">
-    Touch me!
-    <br>
+    <%= link_to scanner_path, class: "bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg mb-4" do %>
+      QR Scanner
+    <% end %>
     <%= image_tag @qr_url %>
     <br>
     <div class="w-full grid gap-4 grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 mt-4">

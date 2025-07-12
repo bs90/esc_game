@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  before_action :require_current_user
+  before_action :require_current_user, except: :index
 
   def index
     if current_user
@@ -15,6 +15,9 @@ class HomeController < ApplicationController
 
   def notifications
     @notifications = Notification.all.order(created_at: :desc)
+  end
+
+  def scanner
   end
 
   private
