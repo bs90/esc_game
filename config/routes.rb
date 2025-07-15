@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+  namespace :admin do
+      resources :notifications
+      resources :touches
+      resources :users
+
+      root to: "notifications#index"
+    end
   get "home/index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

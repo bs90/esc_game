@@ -59,3 +59,4 @@ gem 'omniauth'
 gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-google-oauth2'
 gem 'dotenv'
+gem "administrate", "1.0.0.beta3"
