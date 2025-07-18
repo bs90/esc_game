@@ -6,9 +6,11 @@
     <%= image_tag @qr_url %>
     <br>
     <div class="w-full grid gap-4 grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 mt-4">
-      <div class="bg-white rounded-xl shadow p-4 text-center w-full">
-        <p class="font-semibold text-lg">Items</p>
-      </div>
+      <%= link_to list_items_path do %>
+        <div class="bg-white rounded-xl shadow p-4 text-center w-full">
+          <p class="font-semibold text-lg">Items</p>
+        </div>
+      <% end %>
       <div class="bg-white rounded-xl shadow p-4 text-center w-full">
         <p class="font-semibold text-lg">Logs</p>
       </div>
