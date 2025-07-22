@@ -3,6 +3,7 @@ Rails.application.routes.draw do
       resources :notifications
       resources :touches
       resources :users
+      resources :items
 
       root to: "notifications#index"
     end
@@ -24,8 +25,10 @@ Rails.application.routes.draw do
   get '/auth/failure', to: redirect('/')
   get '/login', to: redirect('/auth/google_oauth2')
   get '/logout', to: 'sessions#destroy'
-  
+
   get '/touch/:id', to: 'home#touch'
   get '/notifications', to: 'home#notifications'
   get '/scanner', to: 'home#scanner'
+
+  get '/items', to: 'home#list_items', as: :list_items
 end
