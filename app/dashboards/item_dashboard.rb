@@ -1,6 +1,7 @@
 require "administrate/base_dashboard"
 
 class ItemDashboard < Administrate::BaseDashboard
+
   # ATTRIBUTE_TYPES
   # a hash that describes the type of each of the model's fields.
   #
@@ -8,12 +9,11 @@ class ItemDashboard < Administrate::BaseDashboard
   # which determines how the attribute is displayed
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
-    id: Field::String,
+    id: Field::Number,
     name: Field::String,
     category: Field::String,
     image_url: Field::String,
-    user_items: Field::HasMany,
-    users: Field::HasMany,
+    token: Field::String,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -38,8 +38,7 @@ class ItemDashboard < Administrate::BaseDashboard
     name
     category
     image_url
-    user_items
-    users
+    token
     created_at
     updated_at
   ].freeze

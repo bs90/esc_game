@@ -20,6 +20,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_18_135113) do
     t.string "name"
     t.string "category"
     t.string "image_url"
+    t.string "token"
   end
 
   create_table "notifications", force: :cascade do |t|
