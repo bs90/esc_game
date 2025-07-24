@@ -5,6 +5,7 @@ class CreateTableItems < ActiveRecord::Migration[8.0]
       t.string :name
       t.string :category
       t.string :image_url
+      t.string :token
     end
   end
 end

@@ -6,12 +6,12 @@
       <% @items.each do |item| %>
         <div class="bg-white rounded-xl shadow p-4 text-center w-full aspect-square flex flex-col justify-center items-center">
           <div class="mb-3">
-            <% if item.user_items.any? %>
+            <% if item.image_url.present? %>
               <div class="mb-3">
-                <%= image_tag item.user_items.first.image_url,
+                <%= image_tag item.image_url,
                     class: "w-60 h-60 mb-2 rounded-lg object-cover cursor-pointer hover:opacity-80 transition-opacity",
                     onerror: "this.style.display='none'; this.nextElementSibling.style.display='block';",
-                    onclick: "openImageModal('#{item.user_items.first.image_url}', '')" %>
+                    onclick: "openImageModal('#{item.image_url}', '')" %>
                 <div class="w-60 h-60 mb-2 rounded-lg bg-gray-200 flex items-center justify-center text-gray-500 text-xs cursor-pointer hover:opacity-80 transition-opacity"
                      style="display: none;"
                      onclick="openImageModal('#{item.user_items.first.image_url}', '#{item.name}')">
