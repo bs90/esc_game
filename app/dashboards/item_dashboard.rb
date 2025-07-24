@@ -11,6 +11,7 @@ class ItemDashboard < Administrate::BaseDashboard
     id: Field::String,
     name: Field::String,
     category: Field::String,
+    image_url: Field::String,
     user_items: Field::HasMany,
     users: Field::HasMany,
     created_at: Field::DateTime,
@@ -26,6 +27,7 @@ class ItemDashboard < Administrate::BaseDashboard
     id
     name
     category
+    image_url
     created_at
   ].freeze
 
@@ -35,6 +37,7 @@ class ItemDashboard < Administrate::BaseDashboard
     id
     name
     category
+    image_url
     user_items
     users
     created_at
@@ -47,6 +50,7 @@ class ItemDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = %i[
     name
     category
+    image_url
   ].freeze
 
   # COLLECTION_FILTERS
