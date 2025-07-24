@@ -4,6 +4,7 @@ class CreateTableItems < ActiveRecord::Migration[8.0]
       t.timestamps
       t.string :name
       t.string :category
+      t.string :image_url
     end
   end
 end

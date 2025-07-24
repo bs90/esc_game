@@ -4,7 +4,6 @@ class CreateTableUserItems < ActiveRecord::Migration[8.0]
       t.timestamps
       t.string :user_id
       t.bigint :item_id
-      t.string :image_url
       t.datetime :got_at
     end
   end
