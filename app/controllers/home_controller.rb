@@ -20,6 +20,10 @@ class HomeController < ApplicationController
   def scanner
   end
 
+  def list_items
+    @items = Item.all.left_joins(:user_items).where("user_items.user_id = ? OR user_items.user_id IS NULL", @current_user.id)
+  end
+
   private
   def require_current_user
     return redirect_to root_path unless current_user&.id
