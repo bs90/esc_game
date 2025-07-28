@@ -4,6 +4,7 @@ Rails.application.routes.draw do
       resources :touches
       resources :users
       resources :items
+      resources :user_items
 
       root to: "notifications#index"
     end
