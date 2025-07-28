@@ -21,7 +21,8 @@ class HomeController < ApplicationController
   end
 
   def list_items
-    @items = Item.all.left_joins(:user_items).where("user_items.user_id = ? OR user_items.user_id IS NULL", @current_user.id)
+    @collected_items = Item.all.joins(:user_items).where("user_items.user_id = ?", @current_user.id)
+    @uncollected_items = Item.all - @collected_items
   end
 
   private
