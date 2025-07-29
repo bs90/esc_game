@@ -2,21 +2,21 @@
   <h1 class="text-2xl font-bold mb-6">My Items</h1>
 
   <div class="w-full grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4">
-    <% @collected_items.each do |item| %>
+    <% @items.each do |item| %>
       <div class="bg-white rounded-xl shadow p-4 text-center w-full aspect-square flex flex-col justify-center items-center">
         <div class="mb-3">
           <div class="mb-3">
-            <%= image_tag item.image_url,
-                class: "w-60 h-60 mb-2 rounded-lg object-cover cursor-pointer hover:opacity-80 transition-opacity",
-                onerror: "this.style.display='none'; this.nextElementSibling.style.display='block';",
-                onclick: "openImageModal('#{item.image_url}', '')" %>
+            <% if item.is_collected %>
+              <%= image_tag item.image_url,
+                  class: "w-60 h-60 mb-2 rounded-lg object-cover cursor-pointer hover:opacity-80 transition-opacity",
+                  onerror: "this.style.display='none'; this.nextElementSibling.style.display='block';",
+                  onclick: "openImageModal('#{item.image_url}', '')"
+              %>
+            <% else %>
+              <p class="text-gray-500">?</p>
+            <% end %>
           </div>
         </div>
-      </div>
-    <% end %>
-    <% @uncollected_items.each do |item| %>
-      <div class="bg-white rounded-xl shadow p-4 text-center w-full aspect-square flex flex-col justify-center items-center">
-        <p class="text-gray-500">?</p>
       </div>
     <% end %>
   </div>

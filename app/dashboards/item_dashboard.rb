@@ -14,6 +14,7 @@ class ItemDashboard < Administrate::BaseDashboard
     category: Field::String,
     image_url: Field::String,
     token: Field::String,
+    numerical_order: Field::Number,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -27,6 +28,7 @@ class ItemDashboard < Administrate::BaseDashboard
     id
     name
     category
+    numerical_order
     image_url
     created_at
   ].freeze
@@ -39,6 +41,7 @@ class ItemDashboard < Administrate::BaseDashboard
     category
     image_url
     token
+    numerical_order
     created_at
     updated_at
   ].freeze
@@ -50,6 +53,7 @@ class ItemDashboard < Administrate::BaseDashboard
     name
     category
     image_url
+    numerical_order
   ].freeze
 
   # COLLECTION_FILTERS
