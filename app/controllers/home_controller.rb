@@ -21,8 +21,7 @@ class HomeController < ApplicationController
   end
 
   def list_items
-    @collected_items = Item.all.joins(:user_items).where("user_items.user_id = ?", @current_user.id)
-    @uncollected_items = Item.all - @collected_items
+    @items = Item.list_items(current_user.id)
   end
 
   private
