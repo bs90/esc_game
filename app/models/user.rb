@@ -1,6 +1,5 @@
 class User < ApplicationRecord
-  has_many :user_items, dependent: :destroy
-  has_many :items, through: :user_items
+  belongs_to :team, optional: true
 
   def touch_count
     Touch.where("touched_user_id = :id OR touch_user_id = :id", id: id).count

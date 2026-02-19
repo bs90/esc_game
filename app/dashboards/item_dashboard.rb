@@ -11,7 +11,8 @@ class ItemDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
     name: Field::String,
-    category: Field::String,
+    description: Field::String,
+    points: Field::Number,
     image_url: Field::String,
     token: Field::String,
     numerical_order: Field::Number,
@@ -27,7 +28,8 @@ class ItemDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = %i[
     id
     name
-    category
+    description
+    points
     numerical_order
     image_url
     created_at
@@ -38,7 +40,8 @@ class ItemDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = %i[
     id
     name
-    category
+    description
+    points
     image_url
     token
     numerical_order
@@ -51,7 +54,8 @@ class ItemDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = %i[
     name
-    category
+    description
+    points
     image_url
     numerical_order
   ].freeze
@@ -72,6 +76,6 @@ class ItemDashboard < Administrate::BaseDashboard
   # across all pages of the admin dashboard.
   #
   def display_resource(item)
-    "#{item.name} (#{item.category})"
+    "#{item.name} (#{item.description})"
   end
 end
