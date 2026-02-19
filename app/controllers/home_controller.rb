@@ -21,7 +21,12 @@ class HomeController < ApplicationController
   end
 
   def list_items
-    @items = Item.list_items(current_user.id)
+    team_id = current_user.team_id
+    if team_id.blank?
+      redirect_to root_path, alert: "You are not in a team" # will fix after rooms and teams is implemented
+    else
+      @items = Item.list_items(team_id)
+    end
   end
 
   private
