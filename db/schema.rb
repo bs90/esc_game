@@ -10,22 +10,70 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_29_000450) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_19_071717) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "clear_room_histories", force: :cascade do |t|
+    t.bigint "room_id", null: false
+    t.bigint "team_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["room_id"], name: "index_clear_room_histories_on_room_id"
+    t.index ["team_id"], name: "index_clear_room_histories_on_team_id"
+  end
 
   create_table "items", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
-    t.string "category"
     t.string "image_url"
     t.string "token"
     t.integer "numerical_order"
+    t.integer "points"
+    t.string "description"
+    t.bigint "room_id"
+    t.index ["room_id"], name: "index_items_on_room_id"
   end
 
   create_table "notifications", force: :cascade do |t|
     t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "point_histories", force: :cascade do |t|
+    t.integer "points"
+    t.string "description"
+    t.bigint "team_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["team_id"], name: "index_point_histories_on_team_id"
+  end
+
+  create_table "rooms", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.string "price"
+    t.string "password"
+    t.string "image_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "team_items", force: :cascade do |t|
+    t.bigint "team_id", null: false
+    t.bigint "item_id", null: false
+    t.datetime "got_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_team_items_on_item_id"
+    t.index ["team_id"], name: "index_team_items_on_team_id"
+  end
+
+  create_table "teams", force: :cascade do |t|
+    t.string "name"
+    t.integer "current_points"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -37,17 +85,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_29_000450) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "user_items", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "user_id"
-    t.bigint "item_id"
-    t.datetime "got_at"
-  end
-
   create_table "users", id: :string, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "last_read_notification_id"
+    t.bigint "team_id"
+    t.index ["team_id"], name: "index_users_on_team_id"
   end
+
+  add_foreign_key "clear_room_histories", "rooms"
+  add_foreign_key "clear_room_histories", "teams"
+  add_foreign_key "items", "rooms"
+  add_foreign_key "point_histories", "teams"
+  add_foreign_key "team_items", "items"
+  add_foreign_key "team_items", "teams"
+  add_foreign_key "users", "teams"
 end
