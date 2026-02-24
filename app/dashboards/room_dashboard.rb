@@ -1,7 +1,9 @@
 require "administrate/base_dashboard"
 
-class ItemDashboard < Administrate::BaseDashboard
+# Load custom field type
+require_relative "../fields/image_url"
 
+class RoomDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
   # a hash that describes the type of each of the model's fields.
   #
@@ -12,11 +14,11 @@ class ItemDashboard < Administrate::BaseDashboard
     id: Field::Number,
     name: Field::String,
     description: Field::String,
-    points: Field::Number,
-    image_url: Field::String,
-    token: Field::String,
-    numerical_order: Field::Number,
-    room: Field::BelongsTo,
+    image_url: Field::ImageUrl,
+    password: Field::String,
+    price: Field::String,
+    items: Field::HasMany,
+    teams: Field::HasMany,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -30,10 +32,7 @@ class ItemDashboard < Administrate::BaseDashboard
     id
     name
     description
-    points
-    numerical_order
-    image_url
-    created_at
+    price
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -42,12 +41,13 @@ class ItemDashboard < Administrate::BaseDashboard
     id
     name
     description
-    points
     image_url
-    token
-    numerical_order
+    password
+    price
     created_at
     updated_at
+    items
+    teams
   ].freeze
 
   # FORM_ATTRIBUTES
@@ -56,10 +56,9 @@ class ItemDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = %i[
     name
     description
-    points
     image_url
-    numerical_order
-    room
+    password
+    price
   ].freeze
 
   # COLLECTION_FILTERS
@@ -74,10 +73,11 @@ class ItemDashboard < Administrate::BaseDashboard
   #   }.freeze
   COLLECTION_FILTERS = {}.freeze
 
-  # Overwrite this method to customize how items are displayed
+  # Overwrite this method to customize how rooms are displayed
   # across all pages of the admin dashboard.
   #
-  def display_resource(item)
-    "#{item.name} (#{item.description})"
-  end
+  # def display_resource(room)
+  #   "Room ##{room.id}"
+  # end
+
 end

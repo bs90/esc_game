@@ -1,0 +1,66 @@
+<%# Custom view for has_many field to add "Create new" button %>
+<div class="field-unit field-unit--has-many">
+  <div class="field-unit__field">
+    <% if field.data.any? %>
+      <%# Get dashboard class to access collection attributes %>
+      <% first_resource = field.data.first %>
+      <% dashboard_class_name = "#{first_resource.class.name}Dashboard" %>
+      <% dashboard = dashboard_class_name.constantize.new %>
+
+      <table class="table" style="table-layout: fixed; width: 100%;">
+        <thead>
+          <tr>
+            <% dashboard.class::COLLECTION_ATTRIBUTES.each do |attr_name| %>
+              <th style="max-width: 200px; word-wrap: break-word; overflow-wrap: break-word;"><%= attr_name.to_s.humanize %></th>
+            <% end %>
+            <th style="width: 100px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% field.data.limit(10).each do |resource| %>
+            <tr>
+              <% dashboard.class::COLLECTION_ATTRIBUTES.each_with_index do |attr_name, index| %>
+                <td style="max-width: 200px; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
+                  <% if index == 0 %>
+                    <%# First column (usually name) - make it a link %>
+                    <% resource_path = "/admin/#{resource.class.name.underscore.pluralize}/#{resource.id}" %>
+                    <%= link_to(
+                      resource.send(attr_name).to_s,
+                      resource_path,
+                      class: "action-show"
+                    ) %>
+                  <% else %>
+                    <%= resource.send(attr_name).to_s %>
+                  <% end %>
+                </td>
+              <% end %>
+              <td style="width: 100px; white-space: nowrap;">
+                <% edit_resource_path = "/admin/#{resource.class.name.underscore.pluralize}/#{resource.id}/edit" %>
+                <%= link_to(
+                  "Edit",
+                  edit_resource_path,
+                  class: "button"
+                ) %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <% if field.data.count > 10 %>
+        <p><em>... and <%= field.data.count - 10 %> more</em></p>
+      <% end %>
+    <% end %>
+
+    <%# Add "Create new item" button for items field %>
+    <% if field.attribute.to_s == "items" && field.resource.respond_to?(:id) %>
+      <div style="margin-top: 15px;">
+        <%= link_to(
+          "Create new hints",
+          "/admin/items/new?room_id=#{field.resource.id}",
+          class: "button button--primary"
+        ) %>
+      </div>
+    <% end %>
+  </div>
+</div>
+

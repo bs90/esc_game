@@ -1,0 +1,36 @@
+<% if field.data.present? %>
+  <div class="field-unit__label">
+    <%= field.name.humanize %>
+  </div>
+  <div class="field-unit__field">
+    <% if field.data.include?("drive.google.com") %>
+      <% file_id = field.google_drive_file_id %>
+      <% if file_id %>
+        <%# Try direct image link first %>
+        <%= image_tag field.image_url,
+            alt: field.name.humanize,
+            style: "max-width: 300px; max-height: 300px; object-fit: contain;",
+            onerror: "this.style.display='none'; this.nextElementSibling.style.display='block';" %>
+        <%# Fallback: Use iframe if image fails to load %>
+        <iframe src="https://drive.google.com/file/d/<%= file_id %>/preview"
+                style="display: none; width: 300px; height: 300px; border: none;"
+                class="google-drive-fallback"></iframe>
+        <p style="font-size: 12px; color: #666; margin-top: 5px;">
+          <a href="<%= field.data %>" target="_blank">Mở ảnh trong Google Drive</a>
+        </p>
+      <% else %>
+        <%= image_tag field.data, alt: field.name.humanize, style: "max-width: 300px; max-height: 300px; object-fit: contain;" %>
+      <% end %>
+    <% else %>
+      <%= image_tag field.image_url, alt: field.name.humanize, style: "max-width: 300px; max-height: 300px; object-fit: contain;" %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="field-unit__label">
+    <%= field.name.humanize %>
+  </div>
+  <div class="field-unit__field">
+    <em>No image</em>
+  </div>
+<% end %>
+
