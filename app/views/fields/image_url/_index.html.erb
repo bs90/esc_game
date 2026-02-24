@@ -1,0 +1,18 @@
+<% if field.data.present? %>
+  <% if field.data.include?("drive.google.com") %>
+    <% file_id = field.google_drive_file_id %>
+    <% if file_id %>
+      <%= image_tag field.image_url,
+          alt: field.name.humanize,
+          style: "max-width: 100px; max-height: 100px; object-fit: contain;",
+          onerror: "this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'100\\' height=\\'100\\'%3E%3Ctext x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\'%3EImage%3C/text%3E%3C/svg%3E';" %>
+    <% else %>
+      <%= image_tag field.data, alt: field.name.humanize, style: "max-width: 100px; max-height: 100px; object-fit: contain;" %>
+    <% end %>
+  <% else %>
+    <%= image_tag field.image_url, alt: field.name.humanize, style: "max-width: 100px; max-height: 100px; object-fit: contain;" %>
+  <% end %>
+<% else %>
+  <em>No image</em>
+<% end %>
+

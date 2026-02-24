@@ -1,0 +1,14 @@
+<div class="field-unit__label">
+  <%= f.label field.attribute %>
+</div>
+<div class="field-unit__field">
+  <%= f.text_field field.attribute %>
+  <% if field.data.present? %>
+    <div style="margin-top: 10px;">
+      <label>Preview:</label>
+      <br>
+      <%= image_tag field.image_url, alt: field.name.humanize, style: "max-width: 200px; max-height: 200px; object-fit: contain; margin-top: 5px;" %>
+    </div>
+  <% end %>
+</div>
+

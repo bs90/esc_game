@@ -1,7 +1,6 @@
 require "administrate/base_dashboard"
 
-class ItemDashboard < Administrate::BaseDashboard
-
+class TeamDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
   # a hash that describes the type of each of the model's fields.
   #
@@ -11,12 +10,13 @@ class ItemDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
     name: Field::String,
-    description: Field::String,
-    points: Field::Number,
-    image_url: Field::String,
-    token: Field::String,
-    numerical_order: Field::Number,
-    room: Field::BelongsTo,
+    current_points: Field::Number,
+    users: Field::HasMany,
+    point_histories: Field::HasMany,
+    clear_room_histories: Field::HasMany,
+    rooms: Field::HasMany,
+    team_items: Field::HasMany,
+    items: Field::HasMany,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -29,10 +29,7 @@ class ItemDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = %i[
     id
     name
-    description
-    points
-    numerical_order
-    image_url
+    current_points
     created_at
   ].freeze
 
@@ -41,11 +38,13 @@ class ItemDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = %i[
     id
     name
-    description
-    points
-    image_url
-    token
-    numerical_order
+    current_points
+    users
+    point_histories
+    clear_room_histories
+    rooms
+    team_items
+    items
     created_at
     updated_at
   ].freeze
@@ -55,11 +54,7 @@ class ItemDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = %i[
     name
-    description
-    points
-    image_url
-    numerical_order
-    room
+    current_points
   ].freeze
 
   # COLLECTION_FILTERS
@@ -74,10 +69,12 @@ class ItemDashboard < Administrate::BaseDashboard
   #   }.freeze
   COLLECTION_FILTERS = {}.freeze
 
-  # Overwrite this method to customize how items are displayed
+  # Overwrite this method to customize how teams are displayed
   # across all pages of the admin dashboard.
   #
-  def display_resource(item)
-    "#{item.name} (#{item.description})"
+  def display_resource(team)
+    team.name || "Team ##{team.id}"
   end
 end
+
+
