@@ -1,7 +1,4 @@
 <% if field.data.present? %>
-  <div class="field-unit__label">
-    <%= field.name.humanize %>
-  </div>
   <div class="field-unit__field">
     <% if field.data.include?("drive.google.com") %>
       <% file_id = field.google_drive_file_id %>
@@ -26,9 +23,6 @@
     <% end %>
   </div>
 <% else %>
-  <div class="field-unit__label">
-    <%= field.name.humanize %>
-  </div>
   <div class="field-unit__field">
     <em>No image</em>
   </div>
