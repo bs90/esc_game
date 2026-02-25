@@ -35,6 +35,9 @@ module EscGame
     #
     config.time_zone = 'Tokyo'
     config.active_record.default_timezone = :local
+
+    # Ignore app/fields from autoloading (custom Administrate fields use different namespace)
+    Rails.autoloaders.main.ignore(Rails.root.join("app", "fields"))
     # config.eager_load_paths << Rails.root.join("extras")
 
     # Don't generate system test files.
