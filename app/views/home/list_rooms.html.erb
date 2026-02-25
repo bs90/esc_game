@@ -1,0 +1,77 @@
+<div class="flex flex-col items-center my-4 w-full">
+  <h1 class="text-2xl font-bold mb-6">List Rooms</h1>
+
+  <div class="w-full grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4">
+    <% @rooms.each do |room| %>
+      <div class="bg-white rounded-xl shadow p-4 text-center w-full aspect-square flex flex-col justify-center items-center">
+        <div class="mb-3">
+          <div class="mb-3">
+            <% image_url = google_drive_image_url(room.image_url) %>
+            <%= image_tag image_url,
+                class: "w-60 h-60 mb-2 rounded-lg object-cover cursor-pointer hover:opacity-80 transition-opacity",
+                onerror: "this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'240\\' height=\\'240\\'%3E%3Ctext x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\' dominant-baseline=\\'middle\\'%3EImage not found%3C/text%3E%3C/svg%3E';",
+                onclick: "openImageModal('#{image_url}', '')"
+            %>
+          </div>
+        </div>
+        <div class="mt-2">
+          <%= link_to room_path(room.id), class: "hover:underline" do %>
+            <h3 class="font-bold text-lg mb-1"><%= room.name %></h3>
+          <% end %>
+          <% if room.teams.any? %>
+            <p class="text-sm text-gray-600">
+              Cleared team: <%= room.teams.map(&:name).join(", ") %>
+            </p>
+          <% else %>
+            <p class="text-sm text-gray-400">Not cleared yet</p>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mt-6">
+    <%= link_to "Back to Home", root_path, class: "bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg" %>
+  </div>
+</div>
+
+<!-- Image Modal -->
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
+  <div class="relative max-w-4xl max-h-full p-4">
+    <button onclick="closeImageModal()" class="absolute top-2 right-2 text-white text-2xl font-bold hover:text-gray-300 z-10">
+      ×
+    </button>
+    <div class="text-center">
+      <h3 id="modalTitle" class="text-white text-xl font-bold mb-4"></h3>
+      <img id="modalImage" src="" alt="" class="max-w-full max-h-[80vh] object-contain rounded-lg">
+    </div>
+  </div>
+</div>
+
+<script>
+function openImageModal(imageUrl, title) {
+  document.getElementById('modalImage').src = imageUrl;
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('imageModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeImageModal() {
+  document.getElementById('imageModal').classList.add('hidden');
+  document.body.style.overflow = 'auto';
+}
+
+// Close modal when clicking outside the image
+document.getElementById('imageModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeImageModal();
+  }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeImageModal();
+  }
+});
+</script>

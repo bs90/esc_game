@@ -29,3 +29,16 @@
 
 en:
   hello: "Hello world"
+  administrate:
+    dashboards:
+      room:
+        attributes:
+          teams: "Cleared Teams"
+          items: "Hints"
+    actions:
+      add_new: "Create new hints"
+  activerecord:
+    attributes:
+      room:
+        teams: "Cleared Teams"
+        items: "Hints"
