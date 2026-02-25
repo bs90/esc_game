@@ -3,8 +3,8 @@ Rails.application.routes.draw do
       resources :notifications
       resources :touches
       resources :users
+      resources :rooms
       resources :items
-      resources :user_items
 
       root to: "notifications#index"
     end
@@ -32,4 +32,9 @@ Rails.application.routes.draw do
   get '/scanner', to: 'home#scanner'
 
   get '/items', to: 'home#list_items', as: :list_items
+  get '/rooms', to: 'home#list_rooms', as: :list_rooms
+  get '/rooms/:id', to: 'home#show_room', as: :room
+
+  # Image proxy for Google Drive images
+  get '/images/proxy/:id', to: 'images#proxy', as: :image_proxy
 end

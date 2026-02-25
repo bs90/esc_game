@@ -29,6 +29,25 @@ class HomeController < ApplicationController
     end
   end
 
+  def list_rooms
+    @rooms = Room.all
+                 .left_joins(clear_room_histories: :team)
+                 .includes(clear_room_histories: :team)
+                 .distinct
+  end
+
+  def show_room
+    @room = Room.includes(clear_room_histories: :team).find(params[:id])
+    # Load items ordered by numerical_order
+    @items = @room.items.order(:numerical_order)
+    # Preload team_items for current user's team to check if items are collected
+    if current_user&.team_id.present?
+      @team_items = TeamItem.where(team_id: current_user.team_id, item_id: @items.pluck(:id)).pluck(:item_id)
+    else
+      @team_items = []
+    end
+  end
+
   private
   def require_current_user
     return redirect_to root_path unless current_user&.id

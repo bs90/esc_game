@@ -1,0 +1,132 @@
+<div class="flex flex-col items-center my-4 w-full max-w-4xl mx-auto">
+  <h1 class="text-3xl font-bold mb-6"><%= @room.name %></h1>
+
+  <div class="bg-white rounded-xl shadow-lg p-6 w-full">
+    <!-- Room Image -->
+    <div class="mb-6 text-center">
+      <% image_url = google_drive_image_url(@room.image_url) %>
+      <%= image_tag image_url,
+          class: "w-full max-w-md mx-auto rounded-lg object-cover cursor-pointer hover:opacity-80 transition-opacity",
+          onerror: "this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'400\\' height=\\'300\\'%3E%3Ctext x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\' dominant-baseline=\\'middle\\'%3EImage not found%3C/text%3E%3C/svg%3E';",
+          onclick: "openImageModal('#{image_url}', '#{@room.name}')"
+      %>
+    </div>
+
+    <!-- Room Information -->
+    <div class="space-y-4">
+      <% if @room.description.present? %>
+        <div>
+          <h2 class="font-semibold text-lg mb-2">Description</h2>
+          <p class="text-gray-700"><%= @room.description %></p>
+        </div>
+      <% end %>
+
+      <% if @room.price.present? %>
+        <div>
+          <h2 class="font-semibold text-lg mb-2">Price</h2>
+          <p class="text-gray-700"><%= @room.price %></p>
+        </div>
+      <% end %>
+
+      <!-- Cleared Teams -->
+      <div>
+        <h2 class="font-semibold text-lg mb-2">Cleared Teams</h2>
+        <% if @room.teams.any? %>
+          <ul class="list-disc list-inside text-gray-700">
+            <% @room.teams.each do |team| %>
+              <li><%= team.name %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="text-gray-400">No teams have cleared this room yet.</p>
+        <% end %>
+      </div>
+
+      <!-- Items in Room -->
+      <div>
+        <h2 class="font-semibold text-lg mb-2">Hints in this room</h2>
+        <% if @items.any? %>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <% @items.each do |item| %>
+              <div class="bg-gray-50 rounded-lg p-3 text-center">
+                <% if current_user&.team_id.present? && @team_items.include?(item.id) %>
+                  <%# Team has this item - show full information %>
+                  <% if item.image_url.present? %>
+                    <% item_image_url = google_drive_image_url(item.image_url) %>
+                    <%= image_tag item_image_url,
+                        class: "w-full h-32 object-cover rounded-lg mb-2 cursor-pointer hover:opacity-80 transition-opacity",
+                        onerror: "this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'128\\'%3E%3Ctext x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\' dominant-baseline=\\'middle\\'%3EImage not found%3C/text%3E%3C/svg%3E';",
+                        onclick: "openImageModal('#{item_image_url}', '#{item.name}')"
+                    %>
+                  <% end %>
+                  <p class="font-medium"><%= item.name %></p>
+                  <% if item.description.present? %>
+                    <p class="text-sm text-gray-600"><%= item.description %></p>
+                  <% end %>
+                  <% if item.points.present? %>
+                    <p class="text-sm text-blue-600 font-semibold"><%= item.points %> points</p>
+                  <% end %>
+                <% else %>
+                  <%# Team doesn't have this item - show only dash %>
+                  <p class="font-medium text-gray-400">-</p>
+                  <% if item.points.present? %>
+                    <p class="text-sm text-blue-600 font-semibold"><%= item.points %> points</p>
+                  <% end %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-gray-400">No hints in this room.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6 flex gap-4">
+    <%= link_to "Back to Rooms", list_rooms_path, class: "bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg" %>
+    <%= link_to "Back to Home", root_path, class: "bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg" %>
+  </div>
+</div>
+
+<!-- Image Modal -->
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
+  <div class="relative max-w-4xl max-h-full p-4">
+    <button onclick="closeImageModal()" class="absolute top-2 right-2 text-white text-2xl font-bold hover:text-gray-300 z-10">
+      ×
+    </button>
+    <div class="text-center">
+      <h3 id="modalTitle" class="text-white text-xl font-bold mb-4"></h3>
+      <img id="modalImage" src="" alt="" class="max-w-full max-h-[80vh] object-contain rounded-lg">
+    </div>
+  </div>
+</div>
+
+<script>
+function openImageModal(imageUrl, title) {
+  document.getElementById('modalImage').src = imageUrl;
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('imageModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeImageModal() {
+  document.getElementById('imageModal').classList.add('hidden');
+  document.body.style.overflow = 'auto';
+}
+
+// Close modal when clicking outside the image
+document.getElementById('imageModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeImageModal();
+  }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeImageModal();
+  }
+});
+</script>
+

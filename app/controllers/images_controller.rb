@@ -10,44 +10,44 @@ class ImagesController < ApplicationController
     end
 
     begin
-      # Fetch image from Google Drive
-      image_url = "https://drive.google.com/uc?export=download&id=#{file_id}"
+      # Try multiple Google Drive URL formats
+      image_urls = [
+        "https://drive.google.com/uc?export=view&id=#{file_id}",
+        "https://drive.google.com/uc?export=download&id=#{file_id}",
+        "https://lh3.googleusercontent.com/d/#{file_id}=w1000"
+      ]
 
-      # Use Net::HTTP to fetch the image
       require 'net/http'
       require 'uri'
 
-      uri = URI(image_url)
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-
-      request = Net::HTTP::Get.new(uri.request_uri)
-      response = http.request(request)
-
-      if response.code == '200'
-        # Set appropriate headers
-        send_data response.body,
-                  type: response.content_type || 'image/jpeg',
-                  disposition: 'inline'
-      else
-        # Try alternative format
-        image_url = "https://drive.google.com/uc?export=view&id=#{file_id}"
+      image_urls.each do |image_url|
         uri = URI(image_url)
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
+        http.read_timeout = 10
+        http.open_timeout = 10
+
         request = Net::HTTP::Get.new(uri.request_uri)
+        # Add user agent to avoid blocking
+        request['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+
         response = http.request(request)
 
-        if response.code == '200'
+        if response.code == '200' && response.body.present?
+          # Set appropriate headers
+          content_type = response.content_type || 'image/jpeg'
           send_data response.body,
-                    type: response.content_type || 'image/jpeg',
+                    type: content_type,
                     disposition: 'inline'
-        else
-          head :not_found
+          return
         end
       end
+
+      # If all URLs fail, return 404
+      head :not_found
     rescue => e
       Rails.logger.error "Error proxying Google Drive image: #{e.message}"
+      Rails.logger.error e.backtrace.join("\n")
       head :internal_server_error
     end
   end
