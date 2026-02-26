@@ -4,7 +4,11 @@ Rails.application.routes.draw do
       resources :touches
       resources :users
       resources :rooms
-      resources :items
+      resources :items do
+        collection do
+          post :sell
+        end
+      end
 
       root to: "notifications#index"
     end
