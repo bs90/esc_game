@@ -38,6 +38,7 @@ Rails.application.routes.draw do
   get '/items', to: 'home#list_items', as: :list_items
   get '/rooms', to: 'home#list_rooms', as: :list_rooms
   get '/rooms/:id', to: 'home#show_room', as: :room
+  post '/rooms/:id/verify_password', to: 'home#verify_password', as: :verify_room_password
 
   # Image proxy for Google Drive images
   get '/images/proxy/:id', to: 'images#proxy', as: :image_proxy

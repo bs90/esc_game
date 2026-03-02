@@ -48,6 +48,30 @@ class HomeController < ApplicationController
     end
   end
 
+  def verify_password
+    @room = Room.find(params[:id])
+    team_id = current_user&.team_id
+
+    if team_id.blank?
+      redirect_to room_path(@room), alert: "You are not in a team"
+      return
+    end
+
+    # Check if team has already cleared this room
+    if ClearRoomHistory.exists?(room_id: @room.id, team_id: team_id)
+      redirect_to room_path(@room), notice: "Your team has already cleared this room!"
+      return
+    end
+
+    # Verify password
+    if params[:password] == @room.password
+      ClearRoomHistory.create!(room_id: @room.id, team_id: team_id)
+      redirect_to room_path(@room), notice: "Congratulations! Your team has cleared this room!"
+    else
+      redirect_to room_path(@room), alert: "Incorrect password. Please try again."
+    end
+  end
+
   private
   def require_current_user
     return redirect_to root_path unless current_user&.id
