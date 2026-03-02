@@ -22,6 +22,20 @@
         <%= link_to "Login with Sun*Email", "/auth/google_oauth2", class: "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" %>
       <% end %>
     </header>
+    <% if notice.present? || alert.present? %>
+      <div class="w-full max-w-4xl mx-auto px-4 mt-4">
+        <% if notice.present? %>
+          <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline"><%= notice %></span>
+          </div>
+        <% end %>
+        <% if alert.present? %>
+          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline"><%= alert %></span>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
     <main class="flex-grow flex items-center justify-center text-gray-700 text-lg">
       <%= yield %>
     </main>
