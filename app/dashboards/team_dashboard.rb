@@ -39,12 +39,6 @@ class TeamDashboard < Administrate::BaseDashboard
     id
     name
     current_points
-    users
-    point_histories
-    clear_room_histories
-    rooms
-    team_items
-    items
     created_at
     updated_at
   ].freeze
@@ -76,5 +70,4 @@ class TeamDashboard < Administrate::BaseDashboard
     team.name || "Team ##{team.id}"
   end
 end
-
 
