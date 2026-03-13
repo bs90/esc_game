@@ -11,9 +11,11 @@
           <p class="font-semibold text-lg">Rooms</p>
         </div>
       <% end %>
-      <div class="bg-white rounded-xl shadow p-4 text-center w-full">
-        <p class="font-semibold text-lg">Logs</p>
-      </div>
+      <%= link_to teams_path do %>
+        <div class="bg-white rounded-xl shadow p-4 text-center w-full">
+          <p class="font-semibold text-lg">Teams</p>
+        </div>
+      <% end %>
       <%= link_to notifications_path do %>
         <div class="bg-white rounded-xl shadow p-4 text-center w-full">
           <p class="font-semibold text-lg flex items-center justify-center">

@@ -1,0 +1,148 @@
+<%= form_for([namespace, page.resource], html: { class: "form" }) do |f| %>
+  <% if page.resource.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= t(
+          "administrate.form.errors",
+          pluralized_errors: pluralize(page.resource.errors.count, t("administrate.form.error")),
+          resource_name: display_resource_name(page.resource_name, singular: true)
+        ) %>
+      </h2>
+
+      <ul>
+        <% page.resource.errors.full_messages.each do |message| %>
+          <li class="flash-error"><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% page.attributes(controller.action_name).each do |title, attributes| -%>
+    <fieldset class="<%= "field-unit--nested" if title.present? %>">
+      <% if title.present? %>
+        <legend><%= t "helpers.label.#{f.object_name}.#{title}", default: title %></legend>
+      <% end %>
+
+      <% attributes.each do |attribute| %>
+        <div class="field-unit field-unit--<%= attribute.html_class %> field-unit--<%= requireness(attribute) %>">
+          <%= render_field attribute, f: f %>
+        </div>
+      <% end %>
+    </fieldset>
+  <% end -%>
+
+  <% raw_member_ids = params.dig(page.resource_name, :member_user_ids) %>
+  <% selected_member_ids = if raw_member_ids.present?
+      raw_member_ids.filter_map do |id|
+        normalized = id.to_s.strip
+        normalized if normalized.present?
+      end
+    else
+      page.resource.users.order(:email).pluck(:id).map(&:to_s)
+    end %>
+  <% all_users = User.order(:email).to_a %>
+  <% member_options = all_users.map do |user|
+      display_name = user.name.presence || user.email.to_s.split("@").first
+      email = user.email.presence || "-"
+      ["#{display_name} (#{email})", user.id]
+    end %>
+  <% member_label_by_id = member_options.to_h { |label, id| [id.to_s, label] } %>
+
+  <fieldset>
+    <legend>Members</legend>
+    <div class="field-unit field-unit--string field-unit--optional">
+      <div class="field-unit__label">
+        <label>Add member</label>
+      </div>
+      <div class="field-unit__field">
+        <%= select_tag(
+          "team_member_picker",
+          options_for_select(member_options),
+          include_blank: "Select a user",
+          id: "team-member-picker"
+        ) %>
+        <button type="button" class="button" id="add-team-member">Add member</button>
+      </div>
+    </div>
+
+    <div class="field-unit field-unit--has-many field-unit--optional">
+      <div class="field-unit__label">
+        <label>Selected members</label>
+      </div>
+      <div class="field-unit__field">
+        <div id="selected-team-members">
+          <% selected_member_ids.each do |member_id| %>
+            <% label = member_label_by_id[member_id] %>
+            <% next if label.blank? %>
+            <div class="team-member-chip" data-user-id="<%= member_id %>" style="margin-bottom: 8px;">
+              <input type="hidden" name="<%= "#{page.resource_name}[member_user_ids][]" %>" value="<%= member_id %>" />
+              <span><%= label %></span>
+              <button type="button" class="button remove-team-member">Remove</button>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="form-actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+<script>
+(() => {
+  const picker = document.getElementById("team-member-picker");
+  const addButton = document.getElementById("add-team-member");
+  const selectedList = document.getElementById("selected-team-members");
+  if (!picker || !addButton || !selectedList || addButton.dataset.bound === "1") return;
+  addButton.dataset.bound = "1";
+
+  const hiddenInputName = "team[member_user_ids][]";
+
+  const selectedIds = () =>
+    Array.from(selectedList.querySelectorAll(".team-member-chip"))
+      .map((node) => String(node.dataset.userId));
+
+  const buildRow = (id, label) => {
+    const row = document.createElement("div");
+    row.className = "team-member-chip";
+    row.dataset.userId = String(id);
+    row.style.marginBottom = "8px";
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = hiddenInputName;
+    input.value = String(id);
+
+    const text = document.createElement("span");
+    text.textContent = label;
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "button remove-team-member";
+    button.textContent = "Remove";
+
+    row.appendChild(input);
+    row.appendChild(text);
+    row.appendChild(button);
+    return row;
+  };
+
+  addButton.addEventListener("click", () => {
+    const id = String(picker.value || "");
+    if (id === "") return;
+    if (selectedIds().includes(id)) return;
+
+    const label = picker.options[picker.selectedIndex]?.text || "";
+    selectedList.appendChild(buildRow(id, label));
+    picker.value = "";
+  });
+
+  selectedList.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) return;
+    if (!target.classList.contains("remove-team-member")) return;
+    target.closest(".team-member-chip")?.remove();
+  });
+})();
+</script>
